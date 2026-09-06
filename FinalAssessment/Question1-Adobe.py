@@ -13,6 +13,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
+# ---------- 1. Load ----------
+
 df = pd.read_csv(
     "FinalAssessment/Adobe(ADBE)Stock/Adobe (ADBE) From 1986 To Dec-2024.csv",
     index_col="Date"
@@ -20,14 +22,18 @@ df = pd.read_csv(
 df.index = pd.to_datetime(df.index, utc=True)
 df = df.sort_index()
 
+# ---------- 2. Descriptive statistics ----------
+
+print("=== Descriptive Statistics ===")
 print(df.shape)
 print(df.dtypes)
 print(df.head())
 print(df.isnull().sum())
 print(df[["Open", "High", "Low", "Close", "Volume"]].describe())
 
-price = df["Close"]
+# ---------- 3. Feature engineering ----------
 
+price = df["Close"]
 df["Return"] = np.log(price / price.shift(1))
 df["MA20"] = price.rolling(20).mean()
 df["MA50"] = price.rolling(50).mean()
@@ -35,11 +41,10 @@ df["MA200"] = price.rolling(200).mean()
 df["Vol20"] = df["Return"].rolling(20).std()
 df["Mom10"] = price / price.shift(10)
 df["Volume_Ratio"] = df["Volume"] / df["Volume"].rolling(20).mean()
-
 df = df.dropna()
+print("\nShape after feature engineering:", df.shape)
 
-print(df[["Close", "Return", "MA20", "MA50", "Vol20", "Mom10", "Volume_Ratio"]].head())
-print(df.shape)
+# ---------- 4. Seaborn EDA ----------
 
 os.makedirs("FinalAssessment/output_plots", exist_ok=True)
 
@@ -63,7 +68,9 @@ plt.title("Adobe - Price Trend")
 plt.savefig("FinalAssessment/output_plots/Adobe_trend.png")
 plt.close()
 
-print("Plots saved in FinalAssessment/output_plots/")
+print("Plots saved")
+
+# ---------- 5. Scikit-Learn models ----------
 
 df["Target"] = (df["Close"].shift(-1) > df["Close"]).astype(int)
 df = df.dropna()
@@ -91,12 +98,14 @@ for train_idx, test_idx in tscv.split(X):
     rf.fit(X_train, y_train)
     acc_rf.append(accuracy_score(y_test, rf.predict(X_test)))
 
-print("Logistic Regression avg accuracy:", np.mean(acc_lr))
+print("\nLogistic Regression avg accuracy:", np.mean(acc_lr))
 print("Random Forest avg accuracy:", np.mean(acc_rf))
 
 final_rf = RandomForestClassifier(n_estimators=200, random_state=42).fit(X, y)
 importances = pd.Series(final_rf.feature_importances_, index=features).sort_values(ascending=False)
 print("Feature importances:\n", importances)
+
+# ---------- 6. Clustering (KMeans + PCA) ----------
 
 X_scaled = StandardScaler().fit_transform(X)
 X_pca = PCA(n_components=2).fit_transform(X_scaled)
@@ -110,7 +119,8 @@ plt.close()
 
 print(df["Regime"].value_counts())
 
-# Backtesting metrics
+# ---------- 7. Backtesting metrics ----------
+
 returns = df["Return"]
 sharpe = (returns.mean() / returns.std()) * np.sqrt(252)
 cum_return = (1 + returns).cumprod()
@@ -118,6 +128,6 @@ drawdown = (cum_return - cum_return.cummax()) / cum_return.cummax()
 years = (df.index[-1] - df.index[0]).days / 365.25
 cagr = cum_return.iloc[-1] ** (1 / years) - 1
 
-print("Sharpe Ratio:", sharpe)
+print("\nSharpe Ratio:", sharpe)
 print("Max Drawdown:", drawdown.min())
 print("CAGR:", cagr)
