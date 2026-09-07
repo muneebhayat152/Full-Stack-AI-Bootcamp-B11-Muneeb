@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge, Lasso
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import TimeSeriesSplit
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error, mean_squared_error
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
@@ -166,3 +166,38 @@ print("CAGR:", cagr)
 
 print("Avg return on dividend days:", df[df["Dividends"] > 0]["Return"].mean())
 print("Avg return on normal days:", df[df["Dividends"] == 0]["Return"].mean())
+
+# ---------- 12. Regression models (Linear / Ridge / Lasso) predicting next-day return ----------
+
+df["Target_Return"] = df["Return"].shift(-1)
+df = df.dropna(subset=["Target_Return"])
+
+X_reg = df[features]
+y_reg = df["Target_Return"]
+
+reg_models = {
+    "Linear Regression": LinearRegression(),
+    "Ridge Regression": Ridge(alpha=1.0),
+    "Lasso Regression": Lasso(alpha=0.001),
+}
+
+print("\n=== Regression: predicting next-day return (Microsoft) ===")
+for name, model in reg_models.items():
+    r2_scores, rmse_scores, mae_scores = [], [], []
+
+    for train_idx, test_idx in tscv.split(X_reg):
+        X_train, X_test = X_reg.iloc[train_idx], X_reg.iloc[test_idx]
+        y_train, y_test = y_reg.iloc[train_idx], y_reg.iloc[test_idx]
+
+        scaler = StandardScaler()
+        X_train_s = scaler.fit_transform(X_train)
+        X_test_s = scaler.transform(X_test)
+
+        model.fit(X_train_s, y_train)
+        preds = model.predict(X_test_s)
+
+        r2_scores.append(r2_score(y_test, preds))
+        rmse_scores.append(mean_squared_error(y_test, preds) ** 0.5)
+        mae_scores.append(mean_absolute_error(y_test, preds))
+
+    print(f"{name}: avg R2={np.mean(r2_scores):.4f}, avg RMSE={np.mean(rmse_scores):.6f}, avg MAE={np.mean(mae_scores):.6f}")
