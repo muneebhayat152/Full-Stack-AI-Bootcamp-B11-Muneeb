@@ -2,6 +2,7 @@
 
 **Course:** Full Stack AI – Batch 11
 **Theme:** Comprehensive Stock Price Research Blueprint (Adobe, Microsoft, Oracle, Salesforce)
+**Live Dashboard:** https://muneebhayat152-stock-price-research-batch-11.streamlit.app/
 
 ## Files
 
