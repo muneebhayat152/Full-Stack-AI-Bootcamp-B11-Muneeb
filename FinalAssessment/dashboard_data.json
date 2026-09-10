@@ -1,0 +1,190 @@
+{
+  "Adobe": {
+    "name": "Adobe",
+    "rows": 9453,
+    "date_start": "1987-05-28",
+    "date_end": "2024-11-29",
+    "accuracy": {
+      "Logistic Regression": 0.5196190476190476,
+      "Random Forest": 0.5112380952380953,
+      "Gradient Boosting": 0.5027301587301587
+    },
+    "feature_importance": {
+      "Volume_Ratio": 0.1191,
+      "Return": 0.1174,
+      "BB_Position": 0.1136,
+      "RSI": 0.1129,
+      "Mom10": 0.1127,
+      "Vol20": 0.112,
+      "MACD": 0.11,
+      "MA20": 0.1018,
+      "MA50": 0.1004
+    },
+    "regime_counts": {
+      "0": 4455,
+      "1": 1478,
+      "2": 3520
+    },
+    "sharpe": 0.32655190985201316,
+    "max_drawdown": -0.8932796573994823,
+    "cagr": 0.04018847186714147,
+    "regression": {
+      "Linear Regression": {
+        "r2": -0.09571021336233607,
+        "rmse": 0.028261413404315337,
+        "mae": 0.019945637513881866
+      },
+      "Ridge Regression": {
+        "r2": -0.07706696080068662,
+        "rmse": 0.028073776971667415,
+        "mae": 0.01976829942832358
+      },
+      "Lasso Regression": {
+        "r2": -0.004559518429247777,
+        "rmse": 0.027354350736181043,
+        "mae": 0.019032510006755394
+      }
+    }
+  },
+  "Microsoft": {
+    "name": "Microsoft",
+    "rows": 9899,
+    "date_start": "1986-12-24",
+    "date_end": "2026-04-13",
+    "accuracy": {
+      "Logistic Regression": 0.501516070345664,
+      "Random Forest": 0.49787750151607035,
+      "Gradient Boosting": 0.5017586416009703
+    },
+    "feature_importance": {
+      "Return": 0.1183,
+      "Volume_Ratio": 0.1177,
+      "Vol20": 0.1143,
+      "Mom10": 0.1139,
+      "RSI": 0.1138,
+      "BB_Position": 0.1123,
+      "MACD": 0.1096,
+      "MA20": 0.1002,
+      "MA50": 0.0998
+    },
+    "regime_counts": {
+      "0": 1279,
+      "1": 4916,
+      "2": 3704
+    },
+    "sharpe": 0.5906761610549768,
+    "max_drawdown": -0.8620643339915902,
+    "cagr": 0.15049709728564586,
+    "regression": {
+      "Linear Regression": {
+        "r2": -0.5583544400181548,
+        "rmse": 0.023343391878567404,
+        "mae": 0.016160587799577963
+      },
+      "Ridge Regression": {
+        "r2": -0.5152012306255382,
+        "rmse": 0.023075905887532947,
+        "mae": 0.016023578012258573
+      },
+      "Lasso Regression": {
+        "r2": -0.0022074372769978145,
+        "rmse": 0.019197677839106024,
+        "mae": 0.013432986135138872
+      }
+    }
+  },
+  "Oracle": {
+    "name": "Oracle",
+    "rows": 1276,
+    "date_start": "2019-10-16",
+    "date_end": "2024-11-08",
+    "accuracy": {
+      "Logistic Regression": 0.4641509433962264,
+      "Random Forest": 0.48584905660377353,
+      "Gradient Boosting": 0.47735849056603774
+    },
+    "feature_importance": {
+      "Return": 0.1226,
+      "Volume_Ratio": 0.1209,
+      "Mom10": 0.113,
+      "RSI": 0.113,
+      "Vol20": 0.1109,
+      "MACD": 0.1103,
+      "BB_Position": 0.1094,
+      "MA50": 0.1014,
+      "MA20": 0.0985
+    },
+    "regime_counts": {
+      "0": 575,
+      "1": 483,
+      "2": 218
+    },
+    "sharpe": 0.7470946530669363,
+    "max_drawdown": -0.43325626872304984,
+    "cagr": 0.20699794013383244,
+    "regression": {
+      "Linear Regression": {
+        "r2": -0.2159368283434473,
+        "rmse": 0.020238097849213266,
+        "mae": 0.014056827359684282
+      },
+      "Ridge Regression": {
+        "r2": -0.2233271707976939,
+        "rmse": 0.020276469080374254,
+        "mae": 0.01411044580578367
+      },
+      "Lasso Regression": {
+        "r2": -0.11439526384922476,
+        "rmse": 0.01945442101658334,
+        "mae": 0.013260396209094008
+      }
+    }
+  },
+  "Salesforce": {
+    "name": "Salesforce",
+    "rows": 4947,
+    "date_start": "2005-04-07",
+    "date_end": "2024-11-29",
+    "accuracy": {
+      "Logistic Regression": 0.5058252427184466,
+      "Random Forest": 0.5060679611650486,
+      "Gradient Boosting": 0.503883495145631
+    },
+    "feature_importance": {
+      "Return": 0.1214,
+      "Volume_Ratio": 0.1182,
+      "BB_Position": 0.1155,
+      "Mom10": 0.1148,
+      "RSI": 0.1133,
+      "Vol20": 0.1099,
+      "MACD": 0.1099,
+      "MA20": 0.0992,
+      "MA50": 0.0978
+    },
+    "regime_counts": {
+      "0": 1730,
+      "1": 2066,
+      "2": 1151
+    },
+    "sharpe": 0.5597047157521902,
+    "max_drawdown": -0.7439628768330879,
+    "cagr": 0.1557850280998574,
+    "regression": {
+      "Linear Regression": {
+        "r2": -0.0457598300239999,
+        "rmse": 0.024899650232105646,
+        "mae": 0.01733281862620519
+      },
+      "Ridge Regression": {
+        "r2": -0.03663661825449953,
+        "rmse": 0.024769872757971698,
+        "mae": 0.01719612455300282
+      },
+      "Lasso Regression": {
+        "r2": -0.00019006486399575362,
+        "rmse": 0.024288581021673014,
+        "mae": 0.016680921365971872
+      }
+    }
+  }
+}
