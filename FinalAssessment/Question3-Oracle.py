@@ -7,7 +7,7 @@ import seaborn as sns
 import os
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge, Lasso
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error, mean_squared_error
 from sklearn.cluster import KMeans
@@ -38,6 +38,22 @@ df["MA200"] = price.rolling(200).mean()
 df["Vol20"] = df["Return"].rolling(20).std()
 df["Mom10"] = price / price.shift(10)
 df["Volume_Ratio"] = df["Volume"] / df["Volume"].rolling(20).mean()
+
+delta = price.diff()
+gain = delta.clip(lower=0)
+loss = -delta.clip(upper=0)
+avg_gain = gain.rolling(14).mean()
+avg_loss = loss.rolling(14).mean().replace(0, 1e-10)
+df["RSI"] = 100 - (100 / (1 + avg_gain / avg_loss))
+
+ema12 = price.ewm(span=12, adjust=False).mean()
+ema26 = price.ewm(span=26, adjust=False).mean()
+df["MACD"] = ema12 - ema26
+
+bb_mid = price.rolling(20).mean()
+bb_std = price.rolling(20).std()
+df["BB_Position"] = (price - bb_mid) / (2 * bb_std)
+
 df = df.dropna()
 print("\nShape after feature engineering:", df.shape)
 
@@ -72,12 +88,12 @@ print("Plots saved")
 df["Target"] = (df["Close"].shift(-1) > df["Close"]).astype(int)
 df = df.dropna()
 
-features = ["Return", "MA20", "MA50", "Vol20", "Mom10", "Volume_Ratio"]
+features = ["Return", "MA20", "MA50", "Vol20", "Mom10", "Volume_Ratio", "RSI", "MACD", "BB_Position"]
 X = df[features]
 y = df["Target"]
 
 tscv = TimeSeriesSplit(n_splits=5)
-acc_lr, acc_rf = [], []
+acc_lr, acc_rf, acc_gb = [], [], []
 
 for train_idx, test_idx in tscv.split(X):
     X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
@@ -95,8 +111,13 @@ for train_idx, test_idx in tscv.split(X):
     rf.fit(X_train, y_train)
     acc_rf.append(accuracy_score(y_test, rf.predict(X_test)))
 
+    gb = GradientBoostingClassifier(n_estimators=200, random_state=42)
+    gb.fit(X_train, y_train)
+    acc_gb.append(accuracy_score(y_test, gb.predict(X_test)))
+
 print("\nLogistic Regression avg accuracy:", np.mean(acc_lr))
 print("Random Forest avg accuracy:", np.mean(acc_rf))
+print("Gradient Boosting avg accuracy:", np.mean(acc_gb))
 
 final_rf = RandomForestClassifier(n_estimators=200, random_state=42).fit(X, y)
 importances = pd.Series(final_rf.feature_importances_, index=features).sort_values(ascending=False)
